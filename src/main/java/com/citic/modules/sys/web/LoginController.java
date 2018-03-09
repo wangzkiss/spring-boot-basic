@@ -55,7 +55,6 @@ public class LoginController extends BaseController {
 	public JSONObject login(@RequestParam(required = true) String username,
 			@RequestParam(required = true) String password, @RequestParam(required = false) Boolean rememberMe)
 			throws IOException {
-		JSONObject data = new JSONObject();
 		try {
 			Subject user = SecurityUtils.getSubject();
 			// String pwd=SystemService.entryptPassword(password);
@@ -64,29 +63,18 @@ public class LoginController extends BaseController {
 			tocken.setRememberMe(rememberMe);
 			user.login(tocken);
 			User p = UserUtils.getUser();
-			data.put("success", true);
-			data.put("data", p);
-			data.put("msg", "登录成功！");
-			data.put("sid", UserUtils.getPrincipal().getSessionid());
+			return responseBody(000, p);
 		} catch (UnknownAccountException uae) {
-			data.put("success", false);
-			data.put("msg", "用户不存在！");
+			return responseBody(201, uae.getMessage());
 		} catch (IncorrectCredentialsException ice) {
-			data.put("success", false);
-			data.put("msg", "用户密码错误！");
+			return responseBody(103, ice.getMessage());
 		} catch (LockedAccountException lae) {
-			data.put("success", false);
-			data.put("msg", "用户已锁定！");
+			return responseBody(103, lae.getMessage());
 		} catch (ExcessiveAttemptsException eae) {
-			data.put("success", false);
-			data.put("msg", "用户不允许多次登录！");
+			return responseBody(103, eae.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
-			data.put("success", false);
-			data.put("data", e.getMessage());
-			data.put("msg", "登录失败！");
+			return responseBody(001, e.getMessage());
 		}
-		return data;
 	}
 
 	/**

@@ -9,15 +9,12 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -93,7 +90,7 @@ public abstract class BaseController {
 		}
 		data.put("msg", msg);
 		data.put("code", code);
-		data.put("success",false);
+		logger.error("异常：",e);
 		return data;
 	}
 	
@@ -129,20 +126,46 @@ public abstract class BaseController {
 	}
 
 	/**
-	 * 参数绑定异常
+	 * 
+	 * @param code  
+	 *   错误代号
+	  	000：操作成功
+		001：操作失败
+		002：操作异常
+		003：会话已失效
+		004：权限不足
+		005：数据格式错误
+		998：{errmsg}
+		999：无意义数据
+		101：帐号或密码为空
+		102：未授权登录
+		103：账号或密码错误
+		104：密码错误
+		105：新密码和旧密码一样
+		106：密码为空
+		201：用户不存在
+		203：手机号已被使用
+		204：用户姓名不能为空
+		205：用户手机号不能为空
+		310：应用不存在
+		310：场景不存在
+		310：场景已经存在
+		320：词库不存在
+		601：权限名不能为空
+		602：权限名已存在
+		603：权限不存在
+	 * @param data 返回数据
+	 * @return
 	 */
-	@ExceptionHandler({BindException.class, ConstraintViolationException.class, ValidationException.class})
-    public String bindException() {  
-        return "error/400";
-    }
+	protected JSONObject responseBody(Integer code,Object data) {
+		JSONObject res=new JSONObject();
+		res.put("code", code);
+		res.put("msg", ResultCode.getMsg(code)+"!");
+		res.put("data", data);
+		return res;
+	}
 	
-	/**
-	 * 授权登录异常
-	 */
-	@ExceptionHandler({AuthenticationException.class})
-    public String authenticationException() {  
-        return "error/403";
-    }
+	 
 	
 	/**
 	 * 初始化数据绑定

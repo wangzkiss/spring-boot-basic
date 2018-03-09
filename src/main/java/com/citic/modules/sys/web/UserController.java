@@ -1,36 +1,38 @@
 package com.citic.modules.sys.web;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.citic.modules.sys.dao.User1Mapper;
-import com.citic.modules.sys.entity.UserEntity;
+import com.alibaba.fastjson.JSONObject;
+import com.citic.common.persistence.Page;
+import com.citic.common.web.BaseController;
+import com.citic.modules.sys.entity.User;
+import com.citic.modules.sys.service.SystemService;
 
 @RestController
-public class UserController {
+@RequestMapping(value = "${adminPath}/sys/user")
+public class UserController extends BaseController{
 
     @Autowired
-    private User1Mapper user1Mapper;
+    private SystemService user1Mapper;
 
  
 	
-	@RequestMapping("/getUsers")
-	public List<UserEntity> getUsers() {
-		List<UserEntity> users=user1Mapper.getAll();
-		return users;
+	@RequestMapping("/list")
+	@ResponseBody
+	public JSONObject list(User user, HttpServletRequest request, HttpServletResponse response) {
+		Page<User> page = user1Mapper.findUser(new Page<User>(request, response), user); 
+		return responseBody(000, page);
 	}
 	
   
  
     
-    @RequestMapping(value="/delete/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        user1Mapper.delete(id);
-    }
     
     
 }

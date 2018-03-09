@@ -130,9 +130,7 @@
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
 		 
 		<!-- 如果不是超级管理员，则不显示超级管理员用户 -->
-		<if test="!currentUser.admin">
-			AND a.user_id != '1'
-		</if>
+		 
 		<if test="loginName != null and loginName != ''">
 			AND a.login_name like 
 					<if test="dbName == 'oracle'">'%'||#{loginName}||'%'</if>

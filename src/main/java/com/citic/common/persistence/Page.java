@@ -53,8 +53,6 @@ public class Page<T> implements Serializable  {
 	
 	protected String funcParam = ""; // 函数的附加参数，第三个参数值。
 	
-	private String message = ""; // 设置提示消息，显示在“共n条”之后
-
 	public Page() {
 		this.pageSize = -1;
 	}
@@ -198,121 +196,6 @@ public class Page<T> implements Serializable  {
 	public String toString() {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("<div class=\"fixed-table-pagination\" style=\"display: block;\">");
-//		sb.append("<div class=\"dataTables_info\">");
-//		sb.append("<li class=\"disabled controls\"><a href=\"javascript:\">当前 ");
-//		sb.append("<input type=\"text\" value=\""+pageNo+"\" onkeypress=\"var e=window.event||this;var c=e.keyCode||e.which;if(c==13)");
-//		sb.append(funcName+"(this.value,"+pageSize+",'"+funcParam+"');\" onclick=\"this.select();\"/> / ");
-//		sb.append("<input type=\"text\" value=\""+pageSize+"\" onkeypress=\"var e=window.event||this;var c=e.keyCode||e.which;if(c==13)");
-//		sb.append(funcName+"("+pageNo+",this.value,'"+funcParam+"');\" onclick=\"this.select();\"/> 条，");
-//		sb.append("共 " + count + " 条"+(message!=null?message:"")+"</a></li>\n");
-//		sb.append("</div>");
-		long startIndex = (pageNo-1)*pageSize + 1;
-		long endIndex = pageNo*pageSize <=count? pageNo*pageSize:count;
-		
-		sb.append("<div class=\"pull-left pagination-detail\">");
-		sb.append("<span class=\"pagination-info\">显示第 "+startIndex+" 到第 "+ endIndex +" 条记录，总共 "+count+" 条记录</span>");
-		sb.append("<span class=\"page-list\">每页显示 <span class=\"btn-group dropup\">");
-		sb.append("<button type=\"button\" class=\"btn btn-sm btn-outline dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">");
-		sb.append("<span class=\"page-size\">"+pageSize+"</span> <span class=\"caret\"></span>");
-		sb.append("</button>");
-		sb.append("<ul class=\"dropdown-menu\" role=\"menu\">");
-		sb.append("<li class=\""+getSelected(pageSize,10)+ "\"><a href=\"javascript:"+funcName+"("+pageNo+",10,'"+funcParam+"');\">10</a></li>");
-		sb.append("<li class=\""+getSelected(pageSize,25)+ "\"><a href=\"javascript:"+funcName+"("+pageNo+",25,'"+funcParam+"');\">25</a></li>");
-		sb.append("<li class=\""+getSelected(pageSize,50)+ "\"><a href=\"javascript:"+funcName+"("+pageNo+",50,'"+funcParam+"');\">50</a></li>");
-		sb.append("<li class=\""+getSelected(pageSize,100)+ "\"><a href=\"javascript:"+funcName+"("+pageNo+",100,'"+funcParam+"');\">100</a></li>");
-		sb.append("</ul>");
-		sb.append("</span> 条记录</span>");
-		sb.append("</div>");
-//		sb.append("<p>每页 <select onChange=\""+funcName+"("+pageNo+",this.value,'"+funcParam+"');\"" +"style=\"display:display  !important;\" class=\"form-control m-b input-sm\">" +
-//		        "<option value=\"10\" "+getSelected(pageSize,10)+ ">10</option>" +
-//				"<option value=\"25\" "+getSelected(pageSize,25)+ ">25</option>" +
-//				"<option value=\"50\" "+getSelected(pageSize,50)+ ">50</option>" +
-//				"<option value=\"100\" "+getSelected(pageSize,100)+ ">100</option>" +
-//				"</select> 条记录，显示 " +startIndex+ " 到 "+ endIndex +" 条，共 "+count+" 条</p>");
-//		sb.append("</div>");
-//		sb.append("</div>");
-		
-		
-		
-		
-		sb.append("<div class=\"pull-right pagination-roll\">");
-		sb.append("<ul class=\"pagination pagination-outline\">");
-		if (pageNo == first) {// 如果是首页
-			sb.append("<li class=\"paginate_button previous disabled\"><a href=\"javascript:\"><i class=\"fa fa-angle-double-left\"></i></a></li>\n");
-			sb.append("<li class=\"paginate_button previous disabled\"><a href=\"javascript:\"><i class=\"fa fa-angle-left\"></i></a></li>\n");
-		} else {
-			sb.append("<li class=\"paginate_button previous\"><a href=\"javascript:\" onclick=\""+funcName+"("+first+","+pageSize+",'"+funcParam+"');\"><i class=\"fa fa-angle-double-left\"></i></a></li>\n");
-			sb.append("<li class=\"paginate_button previous\"><a href=\"javascript:\" onclick=\""+funcName+"("+prev+","+pageSize+",'"+funcParam+"');\"><i class=\"fa fa-angle-left\"></i></a></li>\n");
-		}
-
-		int begin = pageNo - (length / 2);
-
-		if (begin < first) {
-			begin = first;
-		}
-
-		int end = begin + length - 1;
-
-		if (end >= last) {
-			end = last;
-			begin = end - length + 1;
-			if (begin < first) {
-				begin = first;
-			}
-		}
-
-		if (begin > first) {
-			int i = 0;
-			for (i = first; i < first + slider && i < begin; i++) {
-				sb.append("<li class=\"paginate_button \"><a href=\"javascript:\" onclick=\""+funcName+"("+i+","+pageSize+",'"+funcParam+"');\">"
-						+ (i + 1 - first) + "</a></li>\n");
-			}
-			if (i < begin) {
-				sb.append("<li class=\"paginate_button disabled\"><a href=\"javascript:\">...</a></li>\n");
-			}
-		}
-
-		for (int i = begin; i <= end; i++) {
-			if (i == pageNo) {
-				sb.append("<li class=\"paginate_button active\"><a href=\"javascript:\">" + (i + 1 - first)
-						+ "</a></li>\n");
-			} else {
-				sb.append("<li class=\"paginate_button \"><a href=\"javascript:\" onclick=\""+funcName+"("+i+","+pageSize+",'"+funcParam+"');\">"
-						+ (i + 1 - first) + "</a></li>\n");
-			}
-		}
-
-		if (last - end > slider) {
-			sb.append("<li class=\"paginate_button disabled\"><a href=\"javascript:\">...</a></li>\n");
-			end = last - slider;
-		}
-
-		for (int i = end + 1; i <= last; i++) {
-			sb.append("<li class=\"paginate_button \"><a href=\"javascript:\" onclick=\""+funcName+"("+i+","+pageSize+",'"+funcParam+"');\">"
-					+ (i + 1 - first) + "</a></li>\n");
-		}
-
-		if (pageNo == last) {
-			sb.append("<li class=\"paginate_button next disabled\"><a href=\"javascript:\"><i class=\"fa fa-angle-right\"></i></a></li>\n");
-			sb.append("<li class=\"paginate_button next disabled\"><a href=\"javascript:\"><i class=\"fa fa-angle-double-right\"></i></a></li>\n");
-		} else {
-			sb.append("<li class=\"paginate_button next\"><a href=\"javascript:\" onclick=\""+funcName+"("+next+","+pageSize+",'"+funcParam+"');\">"
-					+ "<i class=\"fa fa-angle-right\"></i></a></li>\n");
-			sb.append("<li class=\"paginate_button next\"><a href=\"javascript:\" onclick=\""+funcName+"("+last+","+pageSize+",'"+funcParam+"');\">"
-					+ "<i class=\"fa fa-angle-double-right\"></i></a></li>\n");
-		}
-
-		
-        sb.append("</ul>");
-        sb.append("</div>");
-        sb.append("</div>");
-//		sb.insert(0,"<ul>\n").append("</ul>\n");
-		
-//		sb.append("<div style=\"clear:both;\"></div>");
-
-//		sb.insert(0,"<div class=\"page\">\n").append("</div>\n");
-		
 		return sb.toString();
 	}
 	
@@ -545,7 +428,6 @@ public class Page<T> implements Serializable  {
 	 * @param message
 	 */
 	public void setMessage(String message) {
-		this.message = message;
 	}
 	
 	/**

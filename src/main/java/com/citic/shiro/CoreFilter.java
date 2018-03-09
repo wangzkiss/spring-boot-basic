@@ -40,8 +40,8 @@ public class CoreFilter implements Filter {
 			 Principal p= UserUtils.getPrincipal();
 			 if (p==null){
 				 JSONObject data=new JSONObject();
-				 data.put("success", false);
-				 data.put("msg", "用户未登录，请先登录！");
+				 data.put("code", 102);
+				 data.put("msg", "未授权登录！");
 				 response.setCharacterEncoding("utf-8");
 				 response.getWriter().print(data.toJSONString());
 			 }else{
