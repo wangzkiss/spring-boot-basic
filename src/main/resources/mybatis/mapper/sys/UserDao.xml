@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.citic.modules.sys.dao.UserDao">
+	
+	
+	
+    <sql id="userColumns">
+   
+    	a.user_id,
+    	a.company_id AS "company.id",
+    	a.office_id AS "office.id",
+    	a.login_name,
+    	a.password,
+    	a.no,
+		a.name,
+		a.email,
+		a.phone,
+		a.mobile,
+		a.user_type,
+		a.login_ip,
+		a.login_date,
+		a.remarks,
+		a.login_flag,
+		a.photo,
+		a.qrcode,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date,
+		a.del_flag,
+    	c.name AS "company.name",
+    	c.parent_id AS "company.parent.id",
+    	c.parent_ids AS "company.parentIds",
+    	ca.id AS "company.area.id",
+    	ca.name AS "company.area.name",
+    	ca.parent_id AS "company.area.parent.id",
+    	ca.parent_ids AS "company.area.parentIds",
+    	o.name AS "office.name",
+    	o.parent_id AS "office.parent.id",
+    	o.parent_ids AS "office.parentIds",
+    	oa.id AS "office.area.id",
+    	oa.name AS "office.area.name",
+    	oa.parent_id AS "office.area.parent.id",
+    	oa.parent_ids AS "office.area.parentIds",
+    	cu.id AS "company.primaryPerson.id",
+    	cu.name AS "company.primaryPerson.name",
+    	cu2.id AS "company.deputyPerson.id",
+    	cu2.name AS "company.deputyPerson.name",
+    	ou.id AS "office.primaryPerson.id",
+    	ou.name AS "office.primaryPerson.name",
+    	ou2.id AS "office.deputyPerson.id",
+    	ou2.name AS "office.deputyPerson.name"<!-- ,
+        r.id AS "roleList.id",
+        r.office_id AS "roleList.office.id",
+        r.name AS "roleList.name",
+        r.enname AS "roleList.enname",
+        r.role_type AS "roleList.roleType",
+        r.data_scope AS "roleList.dataScope" -->
+    </sql>
+    
+    <sql id="userJoins">
+		LEFT JOIN sys_office c ON c.id = a.company_id
+		LEFT JOIN sys_area ca ON ca.id = c.area_id
+		LEFT JOIN sys_office o ON o.id = a.office_id
+		LEFT JOIN sys_area oa ON oa.id = o.area_id
+		LEFT JOIN sys_user cu ON cu.id = c.primary_person
+		LEFT JOIN sys_user cu2 ON cu2.id = c.deputy_person
+		LEFT JOIN sys_user ou ON ou.id = o.primary_person
+		LEFT JOIN sys_user ou2 ON ou2.id = o.deputy_person<!-- 
+		LEFT JOIN sys_user_role ur ON ur.user_id = a.id
+        LEFT JOIN sys_role r ON r.id = ur.role_id -->
+    </sql>
+	
+	<!-- 根据编号获得用户 -->
+	<select id="get" resultType="User">
+		 SELECT 
+			user_id as id,
+			office_name, 
+			login_name, 
+			user_name as name , 
+			user_pwd as password, 
+			`no`, 
+			email,
+			phone, 
+			user_role, 
+			create_user, 
+			create_time,
+			del_flag
+		FROM sys_user as a
+		WHERE a.user_id = #{id}
+	</select>
+	
+	<!-- 根据登录名查询用户 -->
+	<select id="getByLoginName" resultType="User" parameterType="User">
+		 SELECT 
+			user_id as id,
+			office_name, 
+			login_name, 
+			user_name as name , 
+			user_pwd as password, 
+			`no`, 
+			email,
+			phone, 
+			user_role, 
+			create_user, 
+			create_time,
+			del_flag
+		FROM sys_user as a
+		WHERE a.login_name = #{loginName} AND a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
+	<!-- 分页查询用户信息 -->
+	<select id="findList" resultType="User">
+		 SELECT 
+			user_id as id,
+			office_name, 
+			login_name, 
+			user_name as name , 
+			user_pwd as password, 
+			`no`, 
+			email,
+			phone, 
+			user_role, 
+			create_user, 
+			create_time,
+			del_flag
+		FROM sys_user as a
+		 
+		 
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		 
+		<!-- 如果不是超级管理员，则不显示超级管理员用户 -->
+		<if test="!currentUser.admin">
+			AND a.user_id != '1'
+		</if>
+		<if test="loginName != null and loginName != ''">
+			AND a.login_name like 
+					<if test="dbName == 'oracle'">'%'||#{loginName}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{loginName}, '%')</if>
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name like 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{name}, '%')</if>
+		</if>
+		<!-- 数据范围过滤 -->
+		${sqlMap.dsf}
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_time desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+	
+	
+	
+	<!-- 查询全部用户 -->
+	<select id="findAllList" resultType="User">
+		 SELECT 
+			user_id as id,
+			office_name, 
+			login_name, 
+			user_name as name , 
+			user_pwd as password, 
+			`no`, 
+			email,
+			phone, 
+			user_role, 
+			create_user, 
+			create_time,
+			del_flag
+		FROM sys_user as a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		ORDER BY a.create_time desc
+	</select>
+	
+	<!-- 查询全部用户数目 -->
+	<select id="findAllCount" resultType="long">
+		SELECT
+			COUNT(1)
+		FROM sys_user a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
+	<!-- 插入用户 -->
+	<insert id="insert" useGeneratedKeys="true" keyColumn="id"
+		keyProperty="id" parameterType="User">
+		INSERT INTO sys_user(
+		 
+					office_name, 
+					login_name, 
+					user_name, 
+					user_pwd, 
+					`no`, 
+					email, 
+					phone, 
+					user_role, 
+					create_user, 
+					create_time, 
+					del_flag
+		) VALUES (
+			<!-- #{id},  -->
+			#{officeName}, 
+			#{loginName}, 
+			#{name}, 
+			#{password}, 
+			#{no}, 
+			#{email}, 
+			#{phone}, 
+			#{userType}, 
+			#{createBy.name}, 
+			#{createDate}, 	 
+			#{delFlag}
+		)
+	</insert>
+	
+	<!-- 更新用户 -->
+	<update id="update">
+		UPDATE sys_user SET 
+			 
+			office_name = #{officeName}, 
+			login_name = #{loginName}, 
+			<if test="password != null and password != '' ">
+				password = #{password}, 
+			</if>  
+			no = #{no}, 
+			name = #{name}, 
+			email = #{email}, 
+			phone = #{phone}, 
+			user_role = #{userType}
+		WHERE user_id = #{id}
+	</update>
+	
+	<!-- 删除用户和角色关联表数据 -->
+	<delete id="deleteUserRole">
+		DELETE FROM sys_user_role WHERE user_id = #{id}
+	</delete>
+	
+	 
+	
+	<!-- 更新用户信息  -->
+	<update id="updateUserInfo">
+		UPDATE sys_user SET 
+			name = #{name},
+			email = #{email}, 
+			phone = #{phone}, 
+		WHERE user_id = #{id}
+	</update>
+	
+	<!-- 更新用户密码 -->
+	<update id="updatePasswordById">
+		UPDATE sys_user SET 
+			password = #{password} 
+		WHERE user_id = #{id}
+	</update>
+	 
+	
+	<!-- 物理删除用户 -->
+	<update id="delete">
+		DELETE FROM sys_user 
+		WHERE user_id = #{id}
+	</update>
+	
+	<!-- 逻辑删除用户 -->
+	<update id="deleteByLogic">
+		UPDATE sys_user SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE user_id = #{id}
+	</update>
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty"  resultType="User" statementType="STATEMENT">
+		select * from sys_user where ${propertyName} = '${value}'
+	</select>
+	 
+	
+</mapper>
