@@ -80,10 +80,10 @@ public abstract class BaseController {
 		}else  if(e instanceof MissingServletRequestParameterException)
 		{
 			msg="缺少参数"+((MissingServletRequestParameterException)e).getParameterName();
-			code=100;
+			code=005;
 		} else if(e instanceof MethodArgumentTypeMismatchException)
 		{
-			code=101;
+			code=005;
 			msg=((MethodArgumentTypeMismatchException)e).getName()+
 					"参数类型不合法，需要类型为"+
 					((MethodArgumentTypeMismatchException)e).getRequiredType().getCanonicalName();

@@ -38,9 +38,7 @@ public abstract class DataEntity<T> extends BaseEntity<T>
     
     private int enable;//0 未启用  1 启用  
     
-    protected String createDateString;
-    
-    protected String updateDateString;
+   
     
     protected String share; // 是否开启共享权限，Y 表示开 ；N 表示关  （特殊表的信息才用到）
     
@@ -77,32 +75,9 @@ public abstract class DataEntity<T> extends BaseEntity<T>
         this.share = share;
     }
     
-    /**
-     * 获取创建时间字符串
-     * @return yyyy-MM-dd HH:mm:ss
-     */
-    public String getCreateDateString()
-    {
-        if (createDate == null)
-        {
-            createDate = new Date();
-        }
-        return DateUtils.formatDateTime(createDate);
-    }
+ 
     
-    /**
-     * 获取修改时间字符串
-     * @return yyyy-MM-dd HH:mm:ss
-     */
-    public String getUpdateDateString()
-    {
-        if (updateDate == null)
-        {
-            updateDate = new Date();
-        }
-        return DateUtils.formatDateTime(updateDate);
-    }
-    
+ 
     public int getEnable()
     {
         return enable;
@@ -182,7 +157,7 @@ public abstract class DataEntity<T> extends BaseEntity<T>
         this.createBy = createBy;
     }
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreateDate()
     {
         return createDate;
@@ -204,7 +179,7 @@ public abstract class DataEntity<T> extends BaseEntity<T>
         this.updateBy = updateBy;
     }
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateDate()
     {
         return updateDate;

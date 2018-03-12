@@ -3,7 +3,6 @@
  */
 package com.citic.modules.sys.entity;
 
-import java.awt.Menu;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;

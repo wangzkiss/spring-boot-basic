@@ -23,10 +23,8 @@ import com.citic.common.config.Global;
 import com.citic.common.utils.StringUtils;
 import com.citic.common.web.BaseController;
 import com.citic.modules.sys.entity.Office;
-import com.citic.modules.sys.entity.User;
 import com.citic.modules.sys.service.OfficeService;
 import com.citic.modules.sys.utils.DictUtils;
-import com.citic.modules.sys.utils.UserUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -72,15 +70,7 @@ public class OfficeController extends BaseController {
 	@RequiresPermissions(value={"sys:office:view","sys:office:add","sys:office:edit"},logical=Logical.OR)
 	@RequestMapping(value = "form")
 	public String form(Office office, Model model) {
-		User user = UserUtils.getUser();
-		if (office.getParent()==null || office.getParent().getId()==null){
-			office.setParent(user.getOffice());
-		}
-		office.setParent(officeService.get(office.getParent().getId()));
-		if (office.getArea()==null){
-			office.setArea(user.getOffice().getArea());
-		}
-		// 自动获取排序号
+		 
 		if (StringUtils.isBlank(office.getId())&&office.getParent()!=null){
 			int size = 0;
 			List<Office> list = officeService.findAll();

@@ -6,86 +6,41 @@
 	
     <sql id="userColumns">
    
-    	a.user_id,
-    	a.company_id AS "company.id",
-    	a.office_id AS "office.id",
-    	a.login_name,
-    	a.password,
-    	a.no,
-		a.name,
-		a.email,
-		a.phone,
-		a.mobile,
-		a.user_type,
-		a.login_ip,
-		a.login_date,
-		a.remarks,
-		a.login_flag,
-		a.photo,
-		a.qrcode,
-		a.create_by AS "createBy.id",
-		a.create_date,
-		a.update_by AS "updateBy.id",
-		a.update_date,
-		a.del_flag,
-    	c.name AS "company.name",
-    	c.parent_id AS "company.parent.id",
-    	c.parent_ids AS "company.parentIds",
-    	ca.id AS "company.area.id",
-    	ca.name AS "company.area.name",
-    	ca.parent_id AS "company.area.parent.id",
-    	ca.parent_ids AS "company.area.parentIds",
-    	o.name AS "office.name",
-    	o.parent_id AS "office.parent.id",
-    	o.parent_ids AS "office.parentIds",
-    	oa.id AS "office.area.id",
-    	oa.name AS "office.area.name",
-    	oa.parent_id AS "office.area.parent.id",
-    	oa.parent_ids AS "office.area.parentIds",
-    	cu.id AS "company.primaryPerson.id",
-    	cu.name AS "company.primaryPerson.name",
-    	cu2.id AS "company.deputyPerson.id",
-    	cu2.name AS "company.deputyPerson.name",
-    	ou.id AS "office.primaryPerson.id",
-    	ou.name AS "office.primaryPerson.name",
-    	ou2.id AS "office.deputyPerson.id",
-    	ou2.name AS "office.deputyPerson.name"<!-- ,
-        r.id AS "roleList.id",
-        r.office_id AS "roleList.office.id",
-        r.name AS "roleList.name",
-        r.enname AS "roleList.enname",
-        r.role_type AS "roleList.roleType",
-        r.data_scope AS "roleList.dataScope" -->
+    		a.user_id as id,
+			a.office_name, 
+			a.login_name, 
+			a.user_name as name , 
+			a.user_pwd as password, 
+			a.`no`, 
+			a.email,
+			a.phone, 
+			a.user_role as userType, 
+			a.create_user , 
+			a.create_time as createDate,
+			a.create_time as updateDate,
+			a.del_flag
     </sql>
     
     <sql id="userJoins">
-		LEFT JOIN sys_office c ON c.id = a.company_id
-		LEFT JOIN sys_area ca ON ca.id = c.area_id
-		LEFT JOIN sys_office o ON o.id = a.office_id
-		LEFT JOIN sys_area oa ON oa.id = o.area_id
-		LEFT JOIN sys_user cu ON cu.id = c.primary_person
-		LEFT JOIN sys_user cu2 ON cu2.id = c.deputy_person
-		LEFT JOIN sys_user ou ON ou.id = o.primary_person
-		LEFT JOIN sys_user ou2 ON ou2.id = o.deputy_person<!-- 
-		LEFT JOIN sys_user_role ur ON ur.user_id = a.id
-        LEFT JOIN sys_role r ON r.id = ur.role_id -->
+	
     </sql>
 	
 	<!-- 根据编号获得用户 -->
 	<select id="get" resultType="User">
 		 SELECT 
-			user_id as id,
-			office_name, 
-			login_name, 
-			user_name as name , 
-			user_pwd as password, 
-			`no`, 
-			email,
-			phone, 
-			user_role, 
-			create_user, 
-			create_time,
-			del_flag
+			a.user_id as id,
+			a.office_name as officeName, 
+			a.login_name, 
+			a.user_name as name , 
+			a.user_pwd as password, 
+			a.`no`, 
+			a.email,
+			a.phone, 
+			a.user_role as userType, 
+			a.create_user , 
+			a.create_time as createDate,
+			a.create_time as updateDate,
+			a.del_flag
 		FROM sys_user as a
 		WHERE a.user_id = #{id}
 	</select>

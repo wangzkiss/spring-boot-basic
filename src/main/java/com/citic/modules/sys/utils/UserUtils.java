@@ -108,10 +108,7 @@ public class UserUtils {
 		CacheUtils.remove(USER_CACHE, USER_CACHE_ID_ + user.getId());
 		CacheUtils.remove("rolelist_"+ user.getId());
 		CacheUtils.remove(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName());
-		CacheUtils.remove(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getOldLoginName());
-		if (user.getOffice() != null && user.getOffice().getId() != null){
-			CacheUtils.remove(USER_CACHE, USER_CACHE_LIST_BY_OFFICE_ID_ + user.getOffice().getId());
-		}
+		 
 	}
 	
 	/**
@@ -167,26 +164,7 @@ public class UserUtils {
 		return areaList;
 	}
 	
-	/**
-	 * 获取当前用户有权限访问的部门
-	 * @return
-	 */
-	public static List<Office> getOfficeList(){
-		@SuppressWarnings("unchecked")
-		List<Office> officeList = (List<Office>)getCache(CACHE_OFFICE_LIST);
-		if (officeList == null){
-			User user = getUser();
-			if (user.isAdmin()){
-				officeList = officeDao.findAllList(new Office());
-			}else{
-				Office office = new Office();
-				//office.getSqlMap().put("dsf", BaseService.dataScopeFilter(user, "a", ""));
-				officeList = officeDao.findList(office);
-			}
-			putCache(CACHE_OFFICE_LIST, officeList);
-		}
-		return officeList;
-	}
+
 
 	/**
 	 * 获取当前用户有权限访问的部门

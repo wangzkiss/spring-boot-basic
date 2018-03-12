@@ -23,14 +23,15 @@ import com.citic.modules.sys.utils.UserUtils;
 public class OfficeService extends TreeService<OfficeDao, Office> {
 
 	public List<Office> findAll(){
-		return UserUtils.getOfficeList();
+		
+		return dao.findAllList(new Office());
 	}
 
 	public List<Office> findList(Boolean isAll){
 		if (isAll != null && isAll){
 			return UserUtils.getOfficeAllList();
 		}else{
-			return UserUtils.getOfficeList();
+			return  dao.findAllList(new Office());
 		}
 	}
 	

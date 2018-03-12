@@ -22,7 +22,6 @@ import com.citic.common.utils.Encodes;
 import com.citic.common.utils.StringUtils;
 import com.citic.modules.sys.dao.RoleDao;
 import com.citic.modules.sys.dao.UserDao;
-import com.citic.modules.sys.entity.Office;
 import com.citic.modules.sys.entity.Role;
 import com.citic.modules.sys.entity.User;
 import com.citic.modules.sys.utils.Encr;
@@ -106,7 +105,6 @@ public class SystemService extends BaseService implements InitializingBean {
 		List<User> list = (List<User>)CacheUtils.get(UserUtils.USER_CACHE, UserUtils.USER_CACHE_LIST_BY_OFFICE_ID_ + officeId);
 		if (list == null){
 			User user = new User();
-			user.setOffice(new Office(officeId));
 			list = userDao.findUserByOfficeId(user);
 			CacheUtils.put(UserUtils.USER_CACHE, UserUtils.USER_CACHE_LIST_BY_OFFICE_ID_ + officeId, list);
 		}
@@ -119,31 +117,10 @@ public class SystemService extends BaseService implements InitializingBean {
 			user.preInsert();
 			userDao.insert(user);
 		}else{
-			// 清除原用户机构用户缓存
-			User oldUser = userDao.get(user.getId());
-			if (oldUser.getOffice() != null && oldUser.getOffice().getId() != null){
-				CacheUtils.remove(UserUtils.USER_CACHE, UserUtils.USER_CACHE_LIST_BY_OFFICE_ID_ + oldUser.getOffice().getId());
-			}
+			 
 			// 更新用户数据
 			user.preUpdate();
 			userDao.update(user);
-			if(user.getNewPassword()!=null && !"".equals(user.getNewPassword()))
-			{
-			    String pwd=user.getNewPassword();
-			    userDao.deleteEtlUserById(user.getId());
-			    String etlpassword = Encr.encryptPassword(pwd);
-			    user.setPassword(etlpassword);
-			    userDao.insertEtlUser(user);
-			}
-		}
-		if (StringUtils.isNotBlank(user.getId())){
-			// 更新用户与角色关联
-			userDao.deleteUserRole(user);
-			 
-			// 清除用户缓存
-			UserUtils.clearCache(user);
-//			// 清除权限缓存
-//			systemRealm.clearAllCachedAuthorizationInfo();
 		}
 	}
 	
@@ -186,8 +163,7 @@ public class SystemService extends BaseService implements InitializingBean {
 	@Transactional(readOnly = false)
 	public synchronized void updateUserLoginInfo(User user) {
 		// 保存上次登录信息
-		user.setOldLoginIp(user.getLoginIp());
-		user.setOldLoginDate(user.getLoginDate());
+	 
 		// 更新本次登录信息
 		String host=UserUtils.getSession().getHost();
 		host=host.equals("0:0:0:0:0:0:0:1")?"127.0.0.1":host;
