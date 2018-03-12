@@ -3,24 +3,27 @@
 <mapper namespace="com.citic.modules.sys.dao.LogDao">
     
 	<select id="findList" resultType="Log">
-		SELECT 
-			a.*,
-			u.id AS "createBy.id",
-			u.name AS "createBy.name",
-			c.name AS "createBy.company.name",
-			o.name AS "createBy.office.name"
-		FROM sys_log a
-		JOIN sys_user u ON u.id = a.create_by
-		JOIN sys_office c ON c.id = u.company_id
-		JOIN sys_office o ON o.id = u.office_id
-		WHERE a.create_date BETWEEN #{beginDate} AND #{endDate}
+		SELECT
+			a.id,
+			a.type,
+			a.title,
+			a.create_user AS `createBy.name`,
+			a.create_time AS createTime,
+			a.remote_addr,
+			a.user_agent,
+			a.request_uri,
+			a.method,
+			a.params,
+			a.exception
+			FROM sys_log AS a
+		WHERE a.create_time BETWEEN #{beginDate} AND #{endDate}
 		<if test="title != null and title != ''">
 			AND a.title LIKE 
 					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
 					<if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
 		</if>
-		<if test="createBy != null and createBy.id != null and createBy.id != ''">
-			AND a.create_by = #{createBy.id}
+		<if test="createBy != null and createBy.name != null and createBy.name != ''">
+			AND a.create_by = #{createBy.name}
 		</if>
 		<if test="requestUri != null and requestUri != ''">
 			AND a.request_uri LIKE 
@@ -30,7 +33,7 @@
 		<if test="exception != null and exception != ''">
 			AND a.type = #{TYPE_EXCEPTION}
 		</if>
-		ORDER BY a.create_date DESC
+		ORDER BY a.create_time DESC
 	</select>
 	
 	<select id="get" resultType="Log">
@@ -50,24 +53,16 @@
 	</update>
 	
 	<insert id="insert">
-		INSERT INTO sys_log(
-			id, 
-			type, 
-			title,
-			create_by, 
-			create_date, 
-			remote_addr, 
-			user_agent, 
-			request_uri, 
-			method, 
-			params, 
-			exception
-		) VALUES (
+			INSERT INTO sys_log
+		(
+		id, `type`, title, create_user, create_time, remote_addr, user_agent, request_uri, method, params, exception
+		)
+		VALUES (
 			#{id}, 
 			#{type}, 
 			#{title}, 
-			#{createBy.id}, 
-			#{createDate}, 
+			#{createBy.name}, 
+			NOW(), 
 			#{remoteAddr}, 
 			#{userAgent}, 
 			#{requestUri}, 

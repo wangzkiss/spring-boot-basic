@@ -28,11 +28,23 @@ public class User extends DataEntity<User> {
 	private String name;	// 姓名
 	private String email;	// 邮箱
 	private String phone;	// 电话
-	private String mobile;	// 手机
 	private String userType;// 用户类型
 	private String loginIp;	// 最后登陆IP
 	private Date loginDate;	// 最后登陆日期
 	private String loginFlag;	// 是否允许登陆
+	
+	public User(String officeName, String loginName, String password, String no, String name, String email,
+			String phone, String userType) {
+		super();
+		this.officeName = officeName;
+		this.loginName = loginName;
+		this.password = password;
+		this.no = no;
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
+		this.userType = userType;
+	}
 
 	public User() {
 		super();
@@ -136,20 +148,6 @@ public class User extends DataEntity<User> {
 		this.phone = phone;
 	}
 
-	@Length(min=0, max=200, message="手机长度必须介于 1 和 200 之间")
-	@ExcelField(title="手机", align=2, sort=70)
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	@ExcelField(title="备注", align=1, sort=900)
-	public String getRemarks() {
-		return remarks;
-	}
 	
 	@Length(min=0, max=100, message="用户类型长度必须介于 1 和 100 之间")
 	@ExcelField(title="用户类型", align=2, sort=80, dictType="sys_user_type")
@@ -161,10 +159,7 @@ public class User extends DataEntity<User> {
 		this.userType = userType;
 	}
 
-	@ExcelField(title="创建时间", type=0, align=1, sort=90)
-	public Date getCreateDate() {
-		return createDate;
-	}
+ 
 
 	@ExcelField(title="最后登录IP", type=1, align=1, sort=100)
 	public String getLoginIp() {
@@ -195,9 +190,6 @@ public class User extends DataEntity<User> {
 		return id;
 	}
 
- 
 
-	public boolean getLocked() {
-		return false;
-	}
+	 
 }

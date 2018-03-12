@@ -3,26 +3,19 @@
  */
 package com.citic.modules.sys.utils;
 
-import java.awt.Menu;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.method.HandlerMethod;
 
-import com.citic.common.config.Global;
-import com.citic.common.utils.CacheUtils;
+import com.citic.annotation.Menus;
 import com.citic.common.utils.Exceptions;
 import com.citic.common.utils.SpringContextHolder;
 import com.citic.common.utils.StringUtils;
 import com.citic.modules.sys.dao.LogDao;
 import com.citic.modules.sys.entity.Log;
 import com.citic.modules.sys.entity.User;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * 字典工具类
@@ -81,13 +74,13 @@ public class LogUtils {
 		public void run() {
 			// 获取日志标题
 			if (StringUtils.isBlank(log.getTitle())){
-				String permission = "";
+				String titile = "";
 				if (handler instanceof HandlerMethod){
 					Method m = ((HandlerMethod)handler).getMethod();
-					RequiresPermissions rp = m.getAnnotation(RequiresPermissions.class);
-					permission = (rp != null ? StringUtils.join(rp.value(), ",") : "");
+					Menus mu = m.getAnnotation(Menus.class);
+					titile = mu != null ? StringUtils.join(mu.value(), ",") : "";
 				}
-				log.setTitle("");
+				log.setTitle(titile);
 			}
 			// 如果有异常，设置异常信息
 			log.setException(Exceptions.getStackTraceAsString(ex));

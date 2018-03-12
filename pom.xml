@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.neo</groupId>
-	<artifactId>spring-boot-basic</artifactId>
+	<groupId>com.citic</groupId>
+	<artifactId>data-integration-service</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
@@ -16,9 +16,7 @@
 			<url>http://maven.aliyun.com/nexus/content/repositories/central/</url>
 			<snapshots>
 				<enabled>true</enabled>
-			</snapshots>\
-			
-			
+			</snapshots>
 			<releases>
 				<enabled>true</enabled>
 			</releases>

@@ -34,7 +34,7 @@ public class CoreFilter implements Filter {
 		HttpServletResponse response=(HttpServletResponse)res;
 		String url=request.getRequestURI();
 		log.info(url);
-		if(url.endsWith("/login")){
+		if(url.endsWith("/login") || url.contains("job")){
 			chain.doFilter(request, response);
 		 }else{
 			 Principal p= UserUtils.getPrincipal();

@@ -12,7 +12,6 @@ import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.citic.common.config.Global;
 import com.citic.common.service.BaseService;
 import com.citic.common.utils.DateUtils;
 import com.citic.modules.sys.utils.LogUtils;
@@ -28,27 +27,12 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor
     private static final ThreadLocal<Long> startTimeThreadLocal = new NamedThreadLocal<Long>(
             "ThreadLocal StartTime");
     
-    private boolean isLog(String url)
-    {
-        String keys = Global.getConfig("not_print_log_url");
-        String keyArray[] = keys.split(",");
-        boolean isLog = true;
-        for (String key : keyArray)
-        {
-            if (url.endsWith(key))
-            {
-                isLog = false;
-                break;
-            }
-        }
-        return isLog;
-    }
-    
+   
     @Override
     public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler) throws Exception
     {
-        if (logger.isDebugEnabled() && isLog(request.getRequestURI()))
+        if (logger.isDebugEnabled() )
         {
             long beginTime = System.currentTimeMillis();//1、开始时间  
             startTimeThreadLocal.set(beginTime); //线程绑定变量（该数据只有当前请求的线程可见）  
@@ -63,7 +47,7 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor
             HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception
     {
-        if (modelAndView != null && isLog(request.getRequestURI()))
+        if (modelAndView != null )
         {
             logger.info("ViewName: " + modelAndView.getViewName());
         }
@@ -74,8 +58,6 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor
             HttpServletResponse response, Object handler, Exception ex)
             throws Exception
     {
-        if (isLog(request.getRequestURI()))
-        {
             // 保存日志
             LogUtils.saveLog(request, handler, ex, null);
             // 打印JVM信息。
@@ -95,7 +77,6 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor
                                 .freeMemory()) / 1024 / 1024);
             }
             
-        }
         
     }
     

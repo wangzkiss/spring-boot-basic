@@ -111,13 +111,13 @@ public class SystemService extends BaseService implements InitializingBean {
 		return list;
 	}
 	
+	
 	@Transactional(readOnly = false)
 	public void saveUser(User user) {
 		if (StringUtils.isBlank(user.getId())){
 			user.preInsert();
 			userDao.insert(user);
 		}else{
-			 
 			// 更新用户数据
 			user.preUpdate();
 			userDao.update(user);
@@ -137,12 +137,8 @@ public class SystemService extends BaseService implements InitializingBean {
 	@Transactional(readOnly = false)
 	public void deleteUser(User user) {
 		userDao.delete(user);
-		userDao.deleteEtlUser(user);
-		
 		// 清除用户缓存
 		UserUtils.clearCache(user);
-//		// 清除权限缓存
-//		systemRealm.clearAllCachedAuthorizationInfo();
 	}
 	
 	@Transactional(readOnly = false)

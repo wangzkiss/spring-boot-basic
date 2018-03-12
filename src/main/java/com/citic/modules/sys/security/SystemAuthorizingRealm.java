@@ -5,8 +5,6 @@ package com.citic.modules.sys.security;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -16,21 +14,17 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.citic.common.config.Global;
-import com.citic.common.utils.Encodes;
 import com.citic.common.utils.SpringContextHolder;
 import com.citic.modules.sys.entity.User;
-import com.citic.modules.sys.security.SystemAuthorizingRealm.Principal;
 import com.citic.modules.sys.service.SystemService;
 import com.citic.modules.sys.utils.UserUtils;
 
@@ -69,7 +63,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		// 校验用户名密码
 		User user = getSystemService().getUserByLoginName(uname);
 		if (user != null) {
-			if(user.getLocked()) {
+			if("no".equals(user.getLoginFlag())) {
 	            throw new LockedAccountException(); //帐号锁定
 	        }
 			if(SystemService.validatePassword(pwd,user.getPassword())){
