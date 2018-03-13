@@ -13,6 +13,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import com.citic.common.config.Global;
 import com.citic.common.utils.StringUtils;
 import com.citic.modules.sys.entity.User;
+import com.citic.modules.sys.utils.UserUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 
@@ -71,7 +72,9 @@ public abstract class BaseEntity<T> implements Serializable {
 	@JsonIgnore
 	@XmlTransient
 	public User getCurrentUser() {
-		 
+		if(currentUser == null){
+			currentUser = UserUtils.getUser();
+		}
 		return currentUser;
 	}
 	
@@ -121,6 +124,7 @@ public abstract class BaseEntity<T> implements Serializable {
 	 * 设置为true后强制执行插入语句，ID不会自动生成，需从手动传入。
      * @return
      */
+	@JsonIgnore
 	public boolean getIsNewRecord() {
         return isNewRecord || StringUtils.isBlank(getId());
     }
@@ -187,18 +191,5 @@ public abstract class BaseEntity<T> implements Serializable {
 	 */
 	public static final String SYS_FLAG =Global.getConfig("sys_flag");
 	
-	/**
-	 * 标记是 查看   1  ；编辑  2  
-	 */
-	private String op;
 
-	public String getOp() {
-		return op;
-	}
-
-	public void setOp(String op) {
-		this.op = op;
-	}
-	
-	
 }

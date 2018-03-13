@@ -1,5 +1,5 @@
 /**
- * Copyright &copy; 2015-2020 <a href="http://www.jeeplus.org/">JeePlus</a> All rights reserved.
+ * Copyright &copy; "201"5-2020 <a href="http://www.jeeplus.org/">JeePlus</a> All rights reserved.
  */
 package com.citic.modules.sys.web;
 
@@ -27,7 +27,7 @@ import com.citic.modules.sys.utils.UserUtils;
  * 登录Controller
  * 
  * @author jeeplus
- * @version 2013-5-31
+ * @version "201"3-5-31
  */
 @Controller
 public class LoginController extends BaseController {
@@ -52,17 +52,17 @@ public class LoginController extends BaseController {
 			tocken.setRememberMe(rememberMe);
 			user.login(tocken);
 			User p = UserUtils.getUser();
-			return responseBody(000, p);
+			return responseBody("000", p);
 		} catch (UnknownAccountException uae) {
-			return responseBody(201, uae.getMessage());
+			return responseBody("201", uae.getMessage());
 		} catch (IncorrectCredentialsException ice) {
-			return responseBody(103, ice.getMessage());
+			return responseBody("103", ice.getMessage());
 		} catch (LockedAccountException lae) {
-			return responseBody(103, lae.getMessage());
+			return responseBody("103", lae.getMessage());
 		} catch (ExcessiveAttemptsException eae) {
-			return responseBody(103, eae.getMessage());
+			return responseBody("103", eae.getMessage());
 		} catch (Exception e) {
-			return responseBody(001, e.getMessage());
+			return responseBody("001", e.getMessage());
 		}
 	}
 

@@ -36,7 +36,7 @@ public class LogController extends BaseController {
 	@ResponseBody
 	public JSONObject list(Log log, HttpServletRequest request, HttpServletResponse response) {
         Page<Log> page = logService.findPage(new Page<Log>(request, response), log); 
-    	return responseBody(000, page);
+    	return responseBody("000", page);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class LogController extends BaseController {
 		for(String i : idArray){
 			logService.delete(logService.get(i));
 		}
-		return responseBody(000,id);
+		return responseBody("000",id);
 	}
 	
 	/**
@@ -61,6 +61,6 @@ public class LogController extends BaseController {
 	@ResponseBody
 	public JSONObject   empty() {
 		logService.empty();
-		return responseBody(000,"");
+		return responseBody("000","");
 	}
 }

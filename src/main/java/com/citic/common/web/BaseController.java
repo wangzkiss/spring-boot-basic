@@ -15,6 +15,8 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -70,20 +72,26 @@ public abstract class BaseController {
 	JSONObject defaultErrorHandler(HttpServletRequest red,Exception e){
 		JSONObject data=new JSONObject();
 		String msg="服务器繁忙，稍后重试！";
-		int code=500;
+		String code="500";
 		if(e instanceof NoHandlerFoundException){
 			msg="页面不存在！";
-			code=404;
+			code="404";
 		}else  if(e instanceof AuthenticationException){
 			msg="无权限访问！";
-			code=403;
-		}else  if(e instanceof MissingServletRequestParameterException)
+			code="403";
+		}else if(e instanceof BindException){
+			msg="";
+			for (FieldError error : ((BindException) e).getFieldErrors()) {
+				msg+=error.getDefaultMessage();
+			}
+		}
+		else  if(e instanceof MissingServletRequestParameterException)
 		{
 			msg="缺少参数"+((MissingServletRequestParameterException)e).getParameterName();
-			code=005;
+			code="005";
 		} else if(e instanceof MethodArgumentTypeMismatchException)
 		{
-			code=005;
+			code="005";
 			msg=((MethodArgumentTypeMismatchException)e).getName()+
 					"参数类型不合法，需要类型为"+
 					((MethodArgumentTypeMismatchException)e).getRequiredType().getCanonicalName();
@@ -157,7 +165,7 @@ public abstract class BaseController {
 	 * @param data 返回数据
 	 * @return
 	 */
-	protected JSONObject responseBody(Integer code,Object data) {
+	protected JSONObject responseBody(String code,Object data) {
 		JSONObject res=new JSONObject();
 		res.put("code", code);
 		res.put("msg", ResultCode.getMsg(code)+"!");

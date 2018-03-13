@@ -71,7 +71,7 @@ public class Area extends TreeEntity<Area> {
 	public String getType() {
 		return type;
 	}
-
+	
 	public void setType(String type) {
 		this.type = type;
 	}

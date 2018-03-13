@@ -6,6 +6,7 @@ package com.citic.modules.sys.entity;
 import java.util.Date;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.citic.common.config.Global;
 import com.citic.common.persistence.DataEntity;
@@ -21,13 +22,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User extends DataEntity<User> {
 
 	private static final long serialVersionUID = 1L;
+	@NotBlank(message="部门名称不能为空！")
 	private String officeName;	// 归属部门
+	@NotBlank(message="登录名称不能为空！")
 	private String loginName;// 登录名
+	@NotBlank(message="密码不能为空！")
 	private String password;// 密码
 	private String no;		// 工号
+	@NotBlank(message="姓名不能为空！")
 	private String name;	// 姓名
 	private String email;	// 邮箱
 	private String phone;	// 电话
+	@NotBlank(message="用户角色不能为空！")
 	private String userType;// 用户类型
 	private String loginIp;	// 最后登陆IP
 	private Date loginDate;	// 最后登陆日期

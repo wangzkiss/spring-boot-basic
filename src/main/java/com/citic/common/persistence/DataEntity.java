@@ -33,8 +33,6 @@ public abstract class DataEntity<T> extends BaseEntity<T>
     
     private int enableFlag;//0 未启用  1 启用  
     
-    protected User loginUser;
-    
     protected int isAdmin = 0;
     
     @JsonIgnore
@@ -47,13 +45,6 @@ public abstract class DataEntity<T> extends BaseEntity<T>
     public void setIsAdmin(int isAdmin)
     {
         this.isAdmin = isAdmin;
-    }
-    
-    @JsonIgnore
-    public User getLoginUser()
-    {
-       
-        return loginUser;
     }
     
     @JsonIgnore

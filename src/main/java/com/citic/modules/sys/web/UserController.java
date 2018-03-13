@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,7 +37,7 @@ public class UserController extends BaseController{
 	@ResponseBody
 	public JSONObject list(User user, HttpServletRequest request, HttpServletResponse response) {
 		Page<User> page = user1Mapper.findUser(new Page<User>(request, response), user); 
-		return responseBody(000, page);
+		return responseBody("000", page);
 	}
   
 	/**
@@ -55,17 +56,19 @@ public class UserController extends BaseController{
 	@RequestMapping("/save")
 	@ResponseBody
 	public JSONObject save(
-			@RequestParam(required = true) String officeName,
+			/*@RequestParam(required = true) String officeName,
 			@RequestParam(required = true) String loginName,
 			@RequestParam(required = true) String password,
 			@RequestParam(required = true) String name,
 			@RequestParam(required = true) String userType,
 			@RequestParam(required = false) String no,
 			@RequestParam(required = false) String email,
-			@RequestParam(required = false) String phone) {
-		User user=new User(officeName, loginName, password, no, name, email, phone, userType);
+			@RequestParam(required = false) String phone*/
+			@Validated User user
+			) {
+		//User user=new User(officeName, loginName, password, no, name, email, phone, userType);
 		user1Mapper.saveUser(user);
-		return responseBody(000,user);
+		return responseBody("000",user);
 	}
 	/**
 	 * 用户查看
@@ -79,7 +82,7 @@ public class UserController extends BaseController{
 			@RequestParam(required = true) String id
 			) {
 		User user=user1Mapper.getUser(id);
-		return responseBody(000,user);
+		return responseBody("000",user);
 	}
     
 	/**
@@ -97,6 +100,6 @@ public class UserController extends BaseController{
 		for(String userid : idArray){
 			user1Mapper.deleteUser(user1Mapper.getUser(userid));
 		}
-		return responseBody(000,id);
+		return responseBody("000",id);
 	}
 }

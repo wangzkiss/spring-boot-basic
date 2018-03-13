@@ -208,13 +208,6 @@ public class Page<T> implements Serializable  {
 		}
 		
 	}
-	/**
-	 * 获取分页HTML代码
-	 * @return
-	 */
-	public String getHtml(){
-		return toString();
-	}
 	
 	public static void main(String[] args) {
 		Page<String> p = new Page<String>(3, 3);
