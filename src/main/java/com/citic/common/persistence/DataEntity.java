@@ -33,19 +33,20 @@ public abstract class DataEntity<T> extends BaseEntity<T>
     
     private int enableFlag;//0 未启用  1 启用  
     
-    protected int isAdmin = 0;
+    protected int isAdmin = 0;//0 普通人员     1 管理员
     
     @JsonIgnore
     public int getIsAdmin()
     {
-         
-        return isAdmin;
+    	User user=getCurrentUser();
+    	if("1".equals(user.getUserType()))
+    	{
+    		return 1;
+    	}
+        return 0;
     }
     
-    public void setIsAdmin(int isAdmin)
-    {
-        this.isAdmin = isAdmin;
-    }
+   
     
     @JsonIgnore
     public int getEnableFlag() {

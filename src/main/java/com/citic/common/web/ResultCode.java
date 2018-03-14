@@ -22,6 +22,12 @@ public enum ResultCode {
 	USER_NAME_EMPTY("204", "用户姓名不能为空"), 
 	USER_MOBILE_EMPTY("205", "用户手机号不能为空"), 
 	
+	
+	
+	TYPE_NOT_SURPORT("207", "其他类型不支持抽取"), 
+	//TYPE_NOT_SURPORT("208", "其他类型不支持抽取"), 
+
+	
 	JOBGROUP_EXIST("301","任务组名称已存在"),
 	JOBGROUP_HAVE_JOB("302","该任务组下存在任务，不能删除"),
 	

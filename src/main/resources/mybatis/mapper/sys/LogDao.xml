@@ -7,7 +7,7 @@
 			a.id,
 			a.type,
 			a.title,
-			a.create_user AS `createBy.name`,
+			a.create_user AS `userName`,
 			a.create_time AS createTime,
 			a.remote_addr,
 			a.user_agent,
@@ -22,8 +22,8 @@
 					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
 					<if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
 		</if>
-		<if test="createBy != null and createBy.name != null and createBy.name != ''">
-			AND a.create_by = #{createBy.name}
+		<if test="userName != null and userName != null">
+			AND a.create_user = #{userName}
 		</if>
 		<if test="requestUri != null and requestUri != ''">
 			AND a.request_uri LIKE 

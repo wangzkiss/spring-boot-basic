@@ -15,6 +15,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -95,6 +96,9 @@ public abstract class BaseController {
 			msg=((MethodArgumentTypeMismatchException)e).getName()+
 					"参数类型不合法，需要类型为"+
 					((MethodArgumentTypeMismatchException)e).getRequiredType().getCanonicalName();
+		}else if (e instanceof DuplicateKeyException){
+            msg="保存失败,数据内存在重复！详情请看唯一索引："+e.getCause().getMessage();
+            code="001";
 		}
 		data.put("msg", msg);
 		data.put("code", code);
@@ -169,7 +173,10 @@ public abstract class BaseController {
 		JSONObject res=new JSONObject();
 		res.put("code", code);
 		res.put("msg", ResultCode.getMsg(code)+"!");
-		res.put("data", data);
+		if(null != data)
+		{
+			res.put("data", data);	
+		}
 		return res;
 	}
 	
