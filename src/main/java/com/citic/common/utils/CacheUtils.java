@@ -8,7 +8,6 @@ import java.io.Serializable;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 
-import net.sf.ehcache.Element;
 
 /**
  * Cache工具类
@@ -55,8 +54,7 @@ public class CacheUtils {
 	 * @return
 	 */
 	public static Object get(String cacheName, String key) {
-		Element element = (Element) getCache(cacheName).get(key);
-		return element==null?null:element.getObjectValue();
+		return getCache(cacheName).get(key);
 	}
 
 	/**
@@ -66,8 +64,7 @@ public class CacheUtils {
 	 * @param value
 	 */
 	public static void put(String cacheName, String key, Object value) {
-		Element element = new Element(key, value);
-		getCache(cacheName).put(element, value);
+		getCache(cacheName).put(key, value);
 	}
 
 	/**
@@ -86,9 +83,6 @@ public class CacheUtils {
 	 */
 	private static Cache<Serializable, Object> getCache(String cacheName){
 		Cache<Serializable, Object> cache = cacheManager.getCache(cacheName);
-		if (cache == null){
-		 
-		}
 		return cache;
 	}
 

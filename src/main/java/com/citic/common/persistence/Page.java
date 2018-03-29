@@ -216,6 +216,8 @@ public class Page<T> implements Serializable  {
 		System.out.println("尾页："+p.getLast());
 		System.out.println("上页："+p.getPrev());
 	System.out.println("下页："+p.getNext());
+	System.out.println(p.getClass().getName());
+	System.out.println(p.getClass().getSimpleName());
 }
 
 	/**

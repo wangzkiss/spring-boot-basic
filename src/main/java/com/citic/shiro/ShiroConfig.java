@@ -57,10 +57,10 @@ public class ShiroConfig {
 	private SessionManager sessionManager() {
 		SessionManager sessionManager = new SessionManager();
 		sessionManager.setCacheManager(cacheManager());
-		String timeout = Global.getConfig("session.sessiontimeout");
-		timeout = StringUtils.isEmpty(timeout) ? "180000" : timeout;
-		String timeoutclean = Global.getConfig("session. sessiontimeoutclean");
-		timeoutclean = StringUtils.isEmpty(timeoutclean) ? "180000" : timeoutclean;
+		String timeout = Global.getConfig("session.sessionTimeout");
+		timeout = StringUtils.isEmpty(timeout) ? "1800000" : timeout;
+		String timeoutclean = Global.getConfig("session.sessionTimeoutClean");
+		timeoutclean = StringUtils.isEmpty(timeoutclean) ?"1800000" : timeoutclean;
 		sessionManager.setGlobalSessionTimeout(Long.parseLong(timeout));
 		sessionManager.setSessionValidationInterval(Long.parseLong(timeout));
 		sessionManager.setDeleteInvalidSessions(false);

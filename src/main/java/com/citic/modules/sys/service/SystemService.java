@@ -114,6 +114,11 @@ public class SystemService extends BaseService implements InitializingBean {
 	
 	@Transactional(readOnly = false)
 	public void saveUser(User user) {
+		
+		String pwd=user.getPassword();
+		if(!StringUtils.isEmpty(pwd) && !pwd.endsWith("==")){//未加密时候  需要加密
+			user.setPassword(entryptPassword(pwd));
+		}
 		if (StringUtils.isBlank(user.getId())){
 			user.preInsert();
 			userDao.insert(user);

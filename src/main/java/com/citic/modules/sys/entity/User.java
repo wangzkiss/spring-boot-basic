@@ -12,7 +12,6 @@ import com.citic.common.config.Global;
 import com.citic.common.persistence.DataEntity;
 import com.citic.common.utils.excel.annotation.ExcelField;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 用户Entity
@@ -93,7 +92,7 @@ public class User extends DataEntity<User> {
 	
  
 
-	@Length(min=1, max=100, message="登录名长度必须介于 1 和 100 之间")
+	@Length(min=1, max=30, message="登录名长度必须介于 1 和30之间")
 	@ExcelField(title="登录名", align=2, sort=30)
 	public String getLoginName() {
 		return loginName;
@@ -103,7 +102,6 @@ public class User extends DataEntity<User> {
 		this.loginName = loginName;
 	}
 
-	@JsonIgnore
 	@Length(min=1, max=100, message="密码长度必须介于 1 和 100 之间")
 	public String getPassword() {
 		return password;
@@ -119,7 +117,7 @@ public class User extends DataEntity<User> {
 		return name;
 	}
 	
-	@Length(min=1, max=100, message="工号长度必须介于 1 和 100 之间")
+	@Length(min=0, max=100, message="工号长度必须介于 1 和 100 之间")
 	@ExcelField(title="工号", align=2, sort=45)
 	public String getNo() {
 		return no;
@@ -155,7 +153,7 @@ public class User extends DataEntity<User> {
 	}
 
 	
-	@Length(min=0, max=100, message="用户类型长度必须介于 1 和 100 之间")
+	@Length(min=0, max=3, message="用户类型长度必须介于 1 和 3 之间")
 	@ExcelField(title="用户类型", align=2, sort=80, dictType="sys_user_type")
 	public String getUserType() {
 		return userType;

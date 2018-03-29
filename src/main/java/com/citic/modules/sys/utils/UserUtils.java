@@ -62,7 +62,12 @@ public class UserUtils {
 				return null;
 			}
 			CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
+			
+			
 			CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+			
+			User t = (User)CacheUtils.get(USER_CACHE, USER_CACHE_ID_ + id);
+			System.out.println("缓存用户信息"+t.getLoginName());
 		}
 		return user;
 	}

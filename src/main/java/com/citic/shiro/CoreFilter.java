@@ -47,7 +47,7 @@ public class CoreFilter implements Filter {
 		response.setHeader("Access-Control-Allow-Headers", " Origin, X-Requested-With, Content-Type, Accept, Connection, User-Agent, Cookie");
 		String url=request.getRequestURI();
 		log.info(url);
-		if(url.endsWith("/login") || url.contains("job")){
+		if(url.endsWith("login") || url.contains("job") || url.contains("logout")) {
 			chain.doFilter(request, response);
 		 }else{
 			 Principal p= UserUtils.getPrincipal();

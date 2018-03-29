@@ -13,43 +13,56 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 数据Entity类
+ * 
  * @author jeeplus
  * @version 2014-05-16
  */
-public abstract class DataEntity<T> extends BaseEntity<T>
-{
-    
-    private static final long serialVersionUID = 1L;
-    
-    protected User createBy; // 创建者
-    
-    protected Date createTime; // 创建日期
-    
-    protected User updateBy; // 更新者
-    
-    protected Date updateTime; // 更新日期
-    
-    protected String delFlag; // 删除标记（0：正常；1：删除；2：审核）
-    
-    private int enableFlag;//0 未启用  1 启用  
-    
-    protected int isAdmin = 0;//0 普通人员     1 管理员
-    
-    @JsonIgnore
-    public int getIsAdmin()
-    {
-    	User user=getCurrentUser();
-    	if("1".equals(user.getUserType()))
-    	{
-    		return 1;
-    	}
-        return 0;
-    }
-    
-   
-    
-    @JsonIgnore
-    public int getEnableFlag() {
+public abstract class DataEntity<T> extends BaseEntity<T> {
+
+	private static final long serialVersionUID = 1L;
+
+	protected User createBy; // 创建者
+
+	protected Date createTime; // 创建日期
+
+	protected String createUser; // 创建人名称，用于展示
+
+	protected User updateBy; // 更新者
+
+	protected Date updateTime; // 更新日期
+
+	protected String delFlag; // 删除标记（0：正常；1：删除；2：审核）
+
+	private int enableFlag;// 0 未启用 1 启用
+
+	protected int isAdmin = 0;// 0 普通人员 1 管理员
+
+	protected Date startTime;// 开始时间
+
+	protected Date endTime;// 结束时间
+
+	protected String findBy; // 查询参数
+
+	@JsonIgnore
+	public int getIsAdmin() {
+		User user = getCurrentUser();
+		if ("1".equals(user.getUserType())) {
+			return 1;
+		}
+		return 0;
+	}
+
+	@JsonIgnore
+	public String getFindBy() {
+		return findBy;
+	}
+
+	public void setFindBy(String findBy) {
+		this.findBy = findBy;
+	}
+
+	@JsonIgnore
+	public int getEnableFlag() {
 		return enableFlag;
 	}
 
@@ -57,72 +70,62 @@ public abstract class DataEntity<T> extends BaseEntity<T>
 		this.enableFlag = enableFlag;
 	}
 
-	public DataEntity()
-    {
-        super();
-        this.delFlag = DEL_FLAG_NORMAL;
-    }
-    
-    public DataEntity(String id)
-    {
-        super(id);
-    }
-    
-    /**
-     * 插入之前执行方法，需要手动调用
-     */
-    @JsonIgnore
-    @Override
-    public void preInsert()
-    {
-        // 不限制ID为UUID，调用setIsNewRecord()使用自定义ID
-        if (!this.isNewRecord)
-        {
-            setId(IdGen.uuid());
-        }
-        User user =UserUtils.getUser();
-        if (StringUtils.isNotBlank(user.getId()))
-        {
-            this.updateBy = user;
-            this.createBy = user;
-        }
-        this.updateTime = new Date();
-        this.createTime = this.updateTime;
-    }
-    
-    /**
-     * 更新之前执行方法，需要手动调用
-     */
-    @Override
-    public void preUpdate()
-    {
-        User user =new User();// UserUtils.getUser();
-        if (StringUtils.isNotBlank(user.getId()))
-        {
-            this.updateBy = user;
-        }
-        this.updateTime = new Date();
-    }
-    
-    @JsonIgnore
-    public User getCreateBy()
-    {
-        return createBy;
-    }
-    
-    public void setCreateBy(User createBy)
-    {
-        this.createBy = createBy;
-    }
-    
-    @JsonIgnore
-    public User getUpdateBy()
-    {
-        return updateBy;
-    }
-    
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    public Date getCreateTime() {
+	public DataEntity() {
+		super();
+		this.delFlag = DEL_FLAG_NORMAL;
+	}
+
+	public DataEntity(String id) {
+		super(id);
+	}
+
+	/**
+	 * 插入之前执行方法，需要手动调用
+	 */
+	@JsonIgnore
+	@Override
+	public void preInsert() {
+		// 不限制ID为UUID，调用setIsNewRecord()使用自定义ID
+		if (!this.isNewRecord) {
+			setId(IdGen.uuid());
+		}
+		User user = UserUtils.getUser();
+		if (StringUtils.isNotBlank(user.getId())) {
+			this.updateBy = user;
+			this.createBy = user;
+		}
+		this.updateTime = new Date();
+		this.createTime = this.updateTime;
+	}
+
+	/**
+	 * 更新之前执行方法，需要手动调用
+	 */
+	@Override
+	public void preUpdate() {
+		User user = new User();// UserUtils.getUser();
+		if (StringUtils.isNotBlank(user.getId())) {
+			this.updateBy = user;
+		}
+		this.updateTime = new Date();
+	}
+
+	@JsonIgnore
+	public User getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(User createBy) {
+		this.createBy = createBy;
+	}
+
+	@JsonIgnore
+	public User getUpdateBy() {
+		return updateBy;
+	}
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	public Date getCreateTime() {
 		return createTime;
 	}
 
@@ -130,7 +133,7 @@ public abstract class DataEntity<T> extends BaseEntity<T>
 		this.createTime = createTime;
 	}
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	public Date getUpdateTime() {
 		return updateTime;
 	}
@@ -139,20 +142,43 @@ public abstract class DataEntity<T> extends BaseEntity<T>
 		this.updateTime = updateTime;
 	}
 
-	public void setUpdateBy(User updateBy)
-    {
-        this.updateBy = updateBy;
-    }
-    
-    @JsonIgnore
-    @Length(min = 1, max = 1)
-    public String getDelFlag()
-    {
-        return delFlag;
-    }
-    
-    public void setDelFlag(String delFlag)
-    {
-        this.delFlag = delFlag;
-    }
+	public void setUpdateBy(User updateBy) {
+		this.updateBy = updateBy;
+	}
+
+	@JsonIgnore
+	@Length(min = 1, max = 1)
+	public String getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(String delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	@JsonIgnore
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	@JsonIgnore
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
 }

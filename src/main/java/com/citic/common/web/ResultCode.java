@@ -30,6 +30,8 @@ public enum ResultCode {
 	
 	JOBGROUP_EXIST("301","任务组名称已存在"),
 	JOBGROUP_HAVE_JOB("302","该任务组下存在任务，不能删除"),
+	TASK_EXIST("303","任务名称已存在"),
+	IO_PROSIZE_NOT_EQUELS("304","输入输出的字段数量不一致"),
 	
 	ROLE_NAME_EMPTY("601", "权限名不能为空"),
 	ROLE_NAME_EXIST("602", "权限名已存在"), 
