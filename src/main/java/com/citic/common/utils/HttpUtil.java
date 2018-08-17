@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.citic.modules.meta.util.DBUtils;
 
 
 /**
@@ -186,7 +185,6 @@ public class HttpUtil
 			schema.put("name", "zhansan");
 			schema.put("type", "String");
 			//schema.put("fields",fields);
-			DBUtils.createSchema("kiss", schema);
 			 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
